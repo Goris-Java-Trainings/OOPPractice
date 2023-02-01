@@ -54,4 +54,37 @@ public class Studio {
                 ", filmsCount=" + filmsCount +
                 '}';
     }
+    public static final Studio[] STUDIOS = initStudios();
+
+    private static Studio[] initStudios() {
+        Studio[] allStudios = new Studio[4];
+
+        Studio universalStudio = new Studio(1, "Universal Pictures", 1976);
+        Studio paramountStudio = new Studio(2, "Paramount Pictures",
+                1865);
+        Studio marvelStudio = new Studio(3, "Marvel",
+                1954);
+        Studio metroGoldenStudio = new Studio(4, "MetroGolden",
+                1921);
+
+        allStudios[0] = universalStudio;
+        allStudios[1] = paramountStudio;
+        allStudios[2] = marvelStudio;
+        allStudios[3] = metroGoldenStudio;
+        return allStudios;
+    }
+
+    public static Studio resolveStudio(int id) { // 4,
+        switch (id) {
+            case 1:
+                return STUDIOS[0];
+            case 2:
+                return STUDIOS[1];
+            default:
+            case 3:
+                return STUDIOS[2];
+            case 4:
+                return STUDIOS[3];
+        }
+    }
 }

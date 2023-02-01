@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.enums.Genre;
 import org.example.film.Film;
+import org.example.film.FilmService;
 import org.example.film.impl.ArtFilm;
 import org.example.film.impl.MultFilm;
 import org.example.model.Studio;
@@ -10,26 +11,25 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static final Studio[] STUDIOS = initStudios();
+    /*    private static final Studio[] STUDIOS = initStudios();
+       /* private static Studio[] initStudios() {
+           Studio[] allStudios = new Studio[4];
 
-    private static Studio[] initStudios() {
-        Studio[] allStudios = new Studio[4];
+           Studio universalStudio = new Studio(1, "Universal Pictures", 1976);
+           Studio paramountStudio = new Studio(2, "Paramount Pictures",
+                   1865);
+           Studio marvelStudio = new Studio(3, "Marvel",
+                   1954);
+           Studio metroGoldenStudio = new Studio(4, "MetroGolden",
+                   1921);
 
-        Studio universalStudio = new Studio(1, "Universal Pictures", 1976);
-        Studio paramountStudio = new Studio(2, "Paramount Pictures",
-                1865);
-        Studio marvelStudio = new Studio(3, "Marvel",
-                1954);
-        Studio metroGoldenStudio = new Studio(4, "MetroGolden",
-                1921);
-
-        allStudios[0] = universalStudio;
-        allStudios[1] = paramountStudio;
-        allStudios[2] = marvelStudio;
-        allStudios[3] = metroGoldenStudio;
-        return allStudios;
-    }
-
+           allStudios[0] = universalStudio;
+           allStudios[1] = paramountStudio;
+           allStudios[2] = marvelStudio;
+           allStudios[3] = metroGoldenStudio;
+           return allStudios;
+       }
+   */
     public static void main(String[] args) {
 
         /*System.out.println("Put your username...");
@@ -49,13 +49,13 @@ public class Main {
 
         System.out.println(user);*/
 
-        System.out.println("Put the number of films you want to create...");
+    /*  public Film createFilm() {
+            System.out.println("Put the number of films you want to create...");
         Scanner scanner = new Scanner(System.in);
         int filmsCount = scanner.nextInt();
         if (filmsCount < 1) {
             filmsCount = 1;
         }
-
         int count = 0;
 
         do {
@@ -97,43 +97,34 @@ public class Main {
             film.setLaunchYear(launchYear);
 
             currentStudio.addFilm(film);
-
             count++;
         }
         while (count < filmsCount);
-
+    }*/
+    Film film= FilmService.createFilm();
+    FilmService.printFilmsSince1985();
+     /*   System.out.println("Problem1");
         for (Studio studio : STUDIOS) {
-            System.out.println("The studio: " + studio.getName() +
-                    "has recorded " + studio.getFilmsCount() + " films:\n");
-            if (studio.getFilmsCount() == 0) {
-                System.out.println("-----------/ EMPTY /----------");
-            }
             for (Film film : studio.getFilms()) {
                 if (film == null) {
                     break;
                 }
-                System.out.println(film);
+
+                if (film.getLaunchYear()>1998 ) {
+                    System.out.println("The studio: " + studio.getName() +
+                            "has recorded " + studio.getFilmsCount() + " films:\n");
+                    System.out.println(film.toString());
+                }
+                else System.out.println("No such movie found");
             }
-            System.out.println("---------------------------------------");
-            System.out.println();
-            System.out.println();
-        }
+            
+        }*/
+        System.out.println("--------");
+ //   FilmService.printFilmsRecordedByaSpecificDirector(new Film[]{film});
     }
 
     // TODO: get the films for a specific Studio which are launched after 1985
     // TODO: get all films recorder by specific director
 
-    public static Studio resolveStudio(int id) { // 4,
-        switch (id) {
-            case 1:
-                return STUDIOS[0];
-            case 2:
-                return STUDIOS[1];
-            default:
-            case 3:
-                return STUDIOS[2];
-            case 4:
-                return STUDIOS[3];
-        }
-    }
+
 }

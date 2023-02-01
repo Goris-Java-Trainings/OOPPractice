@@ -92,5 +92,8 @@ public abstract class Film {
                 ", genre=" + genre +
                 ", launchYear=" + launchYear +
                 '}';
+
+
+        }
     }
-}
+
