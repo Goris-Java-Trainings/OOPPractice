@@ -20,5 +20,15 @@ public class User {
         return "[USER]: \n" +
                 "username: " + username +
                 "\nemail: " + email;
+
+
+
+
+
+
+
+
+
+
     }
 }

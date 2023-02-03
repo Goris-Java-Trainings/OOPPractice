@@ -3,8 +3,8 @@ package org.example.film;
 import org.example.enums.Genre;
 import org.example.film.impl.ArtFilm;
 import org.example.film.impl.MultFilm;
+import org.example.model.Person;
 import org.example.model.Studio;
-
 
 import java.util.Scanner;
 
@@ -23,8 +23,7 @@ public class FilmService {
         return new ArtFilm();
     }
 
- //   Film film = null;//
-  //  Film [] films={film} ;//
+
     public static Film createFilm() {
         System.out.println("Put the number of films you want to create...");
         Scanner scanner = new Scanner(System.in);
@@ -37,7 +36,8 @@ public class FilmService {
         Film film;
         do {
             System.out.println("Type the concrete type of the film (M | A )...");
-            String type = scanner.next();
+           String type = scanner.next();
+          //  String isArtfilm = scanner.next();
 
             System.out.println("Type the duration of the film...");
             String duration = scanner.next();
@@ -55,13 +55,18 @@ public class FilmService {
 
             switch (type) {
                 case "M":
+                case "m":
                     film = new MultFilm();
+                    film.setArtfilm(false);
                     break;
                 default:
+                case "a":
                 case "A":
                     film = new ArtFilm();
+                    film.setArtfilm(true);
             }
-
+            film.setType((type));
+          //  film.setArtfilm((Boolean.parseBoolean(isArtfilm));
             film.setDuration(Long.parseLong(duration));
             film.setOperator(film.resolvePerson(operator));
             film.setDirector(film.resolvePerson(director));
@@ -77,42 +82,121 @@ public class FilmService {
         while (count < filmsCount);
         return film;
     }
-    public static void printFilmsSince1985(){
-       System.out.println("Problem1");
+
+    public static void printFilmsSince1985() {
+        System.out.println("Problem1");
+        System.out.println("Films released after 1985.");
         for (Studio studio : STUDIOS) {
             for (Film film : studio.getFilms()) {
                 if (film == null) {
                     break;
                 }
 
-                if (film.getLaunchYear()>1985 ) {
+                if (film.getLaunchYear() > 1985) {
                     System.out.println("The studio: " + studio.getName() +
-                            "has recorded " + studio.getFilmsCount() + " films:\n");
+                            "has recorded " + studio.getFilmsCount() + " films:");
                     System.out.println(film.toString());
                 }
-                else {
-                    System.out.println("No such movie found");
-                }
+
             }
 
         }
 
     }
-  //?????
-    /* public static void printFilmsRecordedByaSpecificDirector(Film [] films){
-        System.out.println("Problem2");
-        boolean conditionIs=true;
-        int count=0;
-        while (conditionIs){
-            conditionIs=false;
-            for (int i = 0; i <films.length-count ; i++) {
-                if (films[i].getDirector()==films[i+1].getDirector()){
-                    System.out.println(films.toString());
-                    conditionIs=true;
+
+    public static void printFilmsRecordedByaSpecificDirector(){
+         System.out.println("Problem2");
+         System.out.println("Type the Director of the film...");
+         Scanner scanner1 = new Scanner(System.in);
+         for (Studio studio : STUDIOS) {
+                 Film [] films= studio.getFilms();
+                 Film film2 = null;
+                 for (int i = 0; i < films.length; i++) {
+                     if (films[i]== null){break;}
+                     String director = scanner1.next();
+                     Person person = films[i].resolvePerson(director);
+
+                     if (films[i].getDirector().getId() == films[i].resolvePerson(director).getId()) {
+                         films[i]=film2;
+                     }
+
+                 }
+                 System.out.println(film2);
+         }
+
+     }
+
+    public static void printlongestArtFilm() {
+        System.out.println("Problem 4");
+        for (Studio studio : STUDIOS) {
+            Film[] films = studio.getFilms();
+            if (films[0]==null){
+                break;
+            }
+            Film max=films[0] ;
+
+            for (int i = 0; i < films.length; i++) {
+                if (films[i]== null){
+                    break;
                 }
-        }
-            count++;
+                if ((films[i].isArtfilm()) && (films[i].getDuration() > max.getDuration())){
+                        max = films[i];
+                }
+
+            }
+            System.out.println(max.toString());
         }
 
-}*/
+    }
+
+
+    public static void mostFrequentGenre() {
+        System.out.println("Problem3");
+        for (Studio studio : STUDIOS) {
+            Film[] films1 = studio.getFilms();
+            int maxcount = 0;
+            Genre genreHavingMaxFrequent = null;
+
+            for (int i = 0; i < films1.length; i++) {
+                int count = 0;
+                for (int j = 0; j < films1.length; j++) {
+                    if ((films1[i]!=null && films1[j]!=null )
+                            &&
+                            (films1[i].getGenre() == films1[j].getGenre())) {
+                        count++;
+                    }
+                }
+
+                if (count > maxcount) {
+                    maxcount = count;
+                    genreHavingMaxFrequent = films1[i].getGenre();
+                }
+                break;
+            }
+                System.out.println("The most popular genre in "+studio.getName()+" is "+genreHavingMaxFrequent);
+            // System.out.println(genreHavingMaxFrequent);
+        }
+
+
+    }
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
