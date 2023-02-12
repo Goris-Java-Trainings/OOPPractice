@@ -93,4 +93,8 @@ public abstract class Film {
                 ", launchYear=" + launchYear +
                 '}';
     }
+
+    public boolean ArtFilm() {
+        return false;
+    }
 }

@@ -4,6 +4,7 @@ import org.example.enums.Genre;
 import org.example.film.Film;
 import org.example.film.impl.ArtFilm;
 import org.example.film.impl.MultFilm;
+import org.example.model.Person;
 import org.example.model.Studio;
 
 import java.util.Scanner;
@@ -134,6 +135,71 @@ public class Main {
                 return STUDIOS[2];
             case 4:
                 return STUDIOS[3];
+        }
+    }
+
+
+    public static void printFilmsSince1985() {
+        System.out.println("Films released after 1985.");
+        for (Studio studio : STUDIOS) {
+            for (Film film : studio.getFilms()) {
+                if (film == null) {
+                    break;
+                }
+                if (film.getLaunchYear() > 1985) {
+                    System.out.println("The studio: " + studio.getName() + " has recorded " + studio.getFilmsCount() + " films:");
+                    System.out.println(film.toString());
+                }
+
+
+            }
+        }
+    }
+
+
+
+    public static void printFilmsByDirector() {
+        System.out.println("Type the Director of the film...");
+        Scanner scanner1 = new Scanner(System.in);
+        for (Studio studio : STUDIOS) {
+            Film[] films = studio.getFilms();
+            Film film = null;
+            for (int i = 0; i < films.length; i++) {
+                if (films[i] == null) {
+                    break;
+                }
+                String director = scanner1.next();
+                Person person = films[i].resolvePerson(director);
+
+                if (films[i].getDirector().getId() == films[i].resolvePerson(director).getId()) {
+                    films[i] = film;
+                }
+
+            }
+            System.out.println(film);
+        }
+
+    }
+
+
+    public static void printLongestArtFilm() {
+        for (Studio studio : STUDIOS) {
+            Film[] films = studio.getFilms();
+            if (films[0] == null) {
+                break;
+            }
+            Film max = films[0];
+
+            for (int i = 0; i < films.length; i++) {
+                if (films[i] == null) {
+                    break;
+                }
+                if ((films[i].ArtFilm()) && (films[i].getDuration() > max.getDuration())) {
+                    max = films[i];
+                }
+
+            }
+            System.out.println(max.toString());
         }
     }
 }
