@@ -2,6 +2,9 @@ package org.example.model;
 
 import org.example.film.Film;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Studio {
 
     private int id;
@@ -54,10 +57,12 @@ public class Studio {
                 ", filmsCount=" + filmsCount +
                 '}';
     }
-    public static final Studio[] STUDIOS = initStudios();
 
-    private static Studio[] initStudios() {
-        Studio[] allStudios = new Studio[4];
+    public static final Map<Integer, Studio> STUDIOS = initStudios();
+    private static int count = 1;
+
+    private static Map<Integer, Studio> initStudios() {
+        Map<Integer, Studio> allStudios = new HashMap<>();
 
         Studio universalStudio = new Studio(1, "Universal Pictures", 1976);
         Studio paramountStudio = new Studio(2, "Paramount Pictures",
@@ -67,24 +72,19 @@ public class Studio {
         Studio metroGoldenStudio = new Studio(4, "MetroGolden",
                 1921);
 
-        allStudios[0] = universalStudio;
-        allStudios[1] = paramountStudio;
-        allStudios[2] = marvelStudio;
-        allStudios[3] = metroGoldenStudio;
+        allStudios.put(count++, universalStudio);
+        allStudios.put(count++, paramountStudio);
+        allStudios.put(count++, marvelStudio);
+        allStudios.put(count++, metroGoldenStudio);
+
         return allStudios;
     }
 
-    public static Studio resolveStudio(int id) { // 4,
-        switch (id) {
-            case 1:
-                return STUDIOS[0];
-            case 2:
-                return STUDIOS[1];
-            default:
-            case 3:
-                return STUDIOS[2];
-            case 4:
-                return STUDIOS[3];
-        }
+    public void add(Studio studio) {
+        STUDIOS.put(count++, studio);
+    }
+
+    public static Studio resolveStudio(Integer id) {
+        return STUDIOS.get(id);
     }
 }

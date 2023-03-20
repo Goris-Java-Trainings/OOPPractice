@@ -1,24 +1,33 @@
 package org.example;
-import org.example.enums.Genre;
+
 import org.example.film.Film;
 import org.example.film.FilmService;
-import org.example.film.impl.ArtFilm;
-import org.example.film.impl.MultFilm;
 import org.example.model.Studio;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
-import static org.example.film.FilmService.mostFrequentGenre;
 
 public class Main {
     public static void main(String[] args) {
-    Film film= FilmService.createFilm();
+
+        Map<Studio, List<Film>> films = new HashMap<>();
+
+        Film film = FilmService.createFilms(films);
         System.out.println("--------");
-   // FilmService.printFilmsSince1985();
+        FilmService.printFilmsSince1985(films);
         System.out.println("--------");
-     FilmService.printFilmsRecordedByaSpecificDirector();
+
+        System.out.println("Type the Director of the film...");
+        Scanner scanner1 = new Scanner(System.in);
+        String director = scanner1.next();
+
+        FilmService.printFilmsRecordedBySpecificDirector(director, films);
         System.out.println("--------");
-  //   FilmService.mostFrequentGenre();//+
+        FilmService.mostFrequentGenre(films);//+
         System.out.println("--------");
-//     FilmService.printlongestArtFilm();
+        FilmService.printlongestArtFilm();
 
 
     }

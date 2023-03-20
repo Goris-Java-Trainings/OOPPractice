@@ -6,9 +6,13 @@ import org.example.film.impl.MultFilm;
 import org.example.model.Person;
 import org.example.model.Studio;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
-//import static org.example.Main.resolveStudio;
 import static org.example.model.Studio.STUDIOS;
 import static org.example.model.Studio.resolveStudio;
 
@@ -24,7 +28,7 @@ public class FilmService {
     }
 
 
-    public static Film createFilm() {
+    public static Film createFilms(Map<Studio, List<Film>> films) {
         System.out.println("Put the number of films you want to create...");
         Scanner scanner = new Scanner(System.in);
         int filmsCount = scanner.nextInt();
@@ -36,8 +40,8 @@ public class FilmService {
         Film film;
         do {
             System.out.println("Type the concrete type of the film (M | A )...");
-           String type = scanner.next();
-          //  String isArtfilm = scanner.next();
+            String type = scanner.next();
+            //  String isArtfilm = scanner.next();
 
             System.out.println("Type the duration of the film...");
             String duration = scanner.next();
@@ -66,27 +70,30 @@ public class FilmService {
                     film.setArtfilm(true);
             }
             film.setType((type));
-          //  film.setArtfilm((Boolean.parseBoolean(isArtfilm));
+            //  film.setArtfilm((Boolean.parseBoolean(isArtfilm));
             film.setDuration(Long.parseLong(duration));
             film.setOperator(film.resolvePerson(operator));
             film.setDirector(film.resolvePerson(director));
             film.setGenre(Genre.valueOf(genre));
 
             Studio currentStudio = resolveStudio(studio);
-            film.setStudio(currentStudio);
+//            film.setStudio(currentStudio);
+            films.putIfAbsent(currentStudio, new LinkedList<>());
+            films.get(currentStudio).add(film);
+
             film.setLaunchYear(launchYear);
 
-            currentStudio.addFilm(film);
+//            currentStudio.addFilm(film);
             count++;
         }
         while (count < filmsCount);
         return film;
     }
 
-    public static void printFilmsSince1985() {
+    public static void printFilmsSince1985(Map<Studio, List<Film>> films) {
         System.out.println("Problem1");
         System.out.println("Films released after 1985.");
-        for (Studio studio : STUDIOS) {
+        /*for (Studio studio : STUDIOS.values()) {
             for (Film film : studio.getFilms()) {
                 if (film == null) {
                     break;
@@ -100,47 +107,62 @@ public class FilmService {
 
             }
 
+        }*/
+
+        for (Map.Entry<Studio, List<Film>> value : films.entrySet()) {
+            for (Film film : value.getValue()) {
+                if (film == null) {
+                    break;
+                }
+
+                Studio studio = value.getKey();
+
+                if (film.getLaunchYear() > 1985) {
+                    System.out.println("The studio: " + studio.getName() +
+                            "has recorded " + studio.getFilmsCount() + " films:");
+                    System.out.println(film);
+                }
+
+            }
         }
 
     }
 
-    public static void printFilmsRecordedByaSpecificDirector(){
-         System.out.println("Problem2");
-         System.out.println("Type the Director of the film...");
-         Scanner scanner1 = new Scanner(System.in);
-         for (Studio studio : STUDIOS) {
-                 Film [] films= studio.getFilms();
-                 Film film2 = null;
-                 for (int i = 0; i < films.length; i++) {
-                     if (films[i]== null){break;}
-                     String director = scanner1.next();
-                     Person person = films[i].resolvePerson(director);
+    public static void printFilmsRecordedBySpecificDirector(String director, Map<Studio, List<Film>> filmsMap) {
+        System.out.println("Problem2");
 
-                     if (films[i].getDirector().getId() == films[i].resolvePerson(director).getId()) {
-                         films[i]=film2;
-                     }
+        for (List<Film> films : filmsMap.values()) {
+            Film film2 = null;
+            for (Film film : films) {
+                if (film == null) {
+                    break;
+                }
+                Person person = film.resolvePerson(director);
 
-                 }
-                 System.out.println(film2);
-         }
+                if (Objects.equals(film.getDirector().getId(), film.resolvePerson(director).getId())) {
+                    film = film2;
+                }
 
-     }
+            }
+            System.out.println(film2);
+        }
+    }
 
     public static void printlongestArtFilm() {
         System.out.println("Problem 4");
-        for (Studio studio : STUDIOS) {
+        for (Studio studio : STUDIOS.values()) {
             Film[] films = studio.getFilms();
-            if (films[0]==null){
+            if (films[0] == null) {
                 break;
             }
-            Film max=films[0] ;
+            Film max = films[0];
 
             for (int i = 0; i < films.length; i++) {
-                if (films[i]== null){
+                if (films[i] == null) {
                     break;
                 }
-                if ((films[i].isArtfilm()) && (films[i].getDuration() > max.getDuration())){
-                        max = films[i];
+                if ((films[i].isArtfilm()) && (films[i].getDuration() > max.getDuration())) {
+                    max = films[i];
                 }
 
             }
@@ -150,37 +172,36 @@ public class FilmService {
     }
 
 
-    public static void mostFrequentGenre() {
+    public static void mostFrequentGenre(Map<Studio, List<Film>> filmsMap) {
         System.out.println("Problem3");
-        for (Studio studio : STUDIOS) {
-            Film[] films1 = studio.getFilms();
+
+        Map<Genre, List<Film>> filmsByGenre = new HashMap<>();
+
+
+        for (List<Film> films : filmsMap.values()) {
             int maxcount = 0;
             Genre genreHavingMaxFrequent = null;
 
-            for (int i = 0; i < films1.length; i++) {
-                int count = 0;
-                for (int j = 0; j < films1.length; j++) {
-                    if ((films1[i]!=null && films1[j]!=null )
-                            &&
-                            (films1[i].getGenre() == films1[j].getGenre())) {
-                        count++;
-                    }
-                }
-
-                if (count > maxcount) {
-                    maxcount = count;
-                    genreHavingMaxFrequent = films1[i].getGenre();
-                }
-                break;
-            }
-                System.out.println("The most popular genre in "+studio.getName()+" is "+genreHavingMaxFrequent);
+//            for (Film film : films) {
+//                int count = 0;
+//                for (int j = 0; j < films1.length; j++) {
+//                    if ((films1[i] != null && films1[j] != null)
+//                            &&
+//                            (films1[i].getGenre() == films1[j].getGenre())) {
+//                        count++;
+//                    }
+//                }
+//
+//                if (count > maxcount) {
+//                    maxcount = count;
+//                    genreHavingMaxFrequent = films1[i].getGenre();
+//                }
+//                break;
+//            }
+//            System.out.println("The most popular genre in " + studio.getName() + " is " + genreHavingMaxFrequent);
             // System.out.println(genreHavingMaxFrequent);
         }
-
-
     }
-
-
 
 
 }
